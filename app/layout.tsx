@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Andika, Fredoka, Patrick_Hand } from "next/font/google";
 import { SiteHeader } from "@/components/SiteHeader";
 import "./globals.css";
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <SiteHeader />
         {children}
+        <Analytics />
       </body>
     </html>
   );
