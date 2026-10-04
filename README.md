@@ -85,3 +85,7 @@ example on Vercel: `npx vercel`.
 The French word list in `public/fr-words.txt` comes from
 [`an-array-of-french-words`](https://github.com/zeke/an-array-of-french-words)
 (MIT license).
+
+## License
+
+MIT, see [LICENSE](LICENSE).
