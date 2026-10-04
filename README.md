@@ -77,8 +77,21 @@ security feature.
 
 ## Deploying
 
-The app has no environment variables and no backend, so it deploys as is, for
-example on Vercel: `npx vercel`.
+The app has no environment variables and no backend, so it deploys as is. It is
+hosted on Vercel (project `fichtre`).
+
+A GitHub Actions workflow (`.github/workflows/ci.yml`) runs on every push and
+pull request:
+
+1. **Type-check and build** (`tsc --noEmit`, `next build`).
+2. **Deploy to Vercel**, only if the checks pass: pushes to `main` go to
+   production, pull requests get a preview deployment. Vercel builds the app
+   itself.
+
+The deploy job needs three repository secrets (Settings > Secrets and
+variables > Actions): `VERCEL_TOKEN`, `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID`
+(the last two are in `.vercel/project.json` after `npx vercel link`). Without
+them the job is skipped with a warning.
 
 ## Credits
 
