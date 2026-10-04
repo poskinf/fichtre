@@ -15,7 +15,7 @@ import type { Card, Deck } from "@/lib/types";
 type Check = "right" | "wrong" | null;
 
 export function Practice({ deck }: { deck: Deck }) {
-  // On reprend là où on en est : seules les cartes pas encore réussies (à corriger ou pas encore faites).
+  // Pick up where we left off: only cards not yet done (to redo, or not started).
   const progress = useProgress(deck.id);
   const settings = useSettings();
   const [initial] = useState<Card[]>(() => {
@@ -44,7 +44,7 @@ export function Practice({ deck }: { deck: Deck }) {
     let insertedAt: number | null = null;
     let missedAdded = false;
     if (wasMissed) {
-      // La carte ratée revient plus tard, à une place au hasard (pas juste après).
+      // A missed card comes back later at a random position (never right after).
       const from = Math.min(queue.length, index + 2);
       insertedAt = from + Math.floor(Math.random() * (queue.length - from + 1));
       setQueue((q) => [...q.slice(0, insertedAt!), card, ...q.slice(insertedAt!)]);
@@ -60,11 +60,11 @@ export function Practice({ deck }: { deck: Deck }) {
     setIndex((i) => i + 1);
   }
 
-  /** Revient à la carte précédente en annulant ce qu'elle avait provoqué. */
+  /** Goes back to the previous card, undoing what it caused. */
   function back() {
     const last = history.current.pop();
     if (!last) return;
-    // Si la carte en cours vient d'être validée sans passer à la suivante, on annule aussi son résultat.
+    // If the current card was just validated without moving on, undo its result too.
     if (beforeCheck.current?.id === card.id) {
       patchEntry(deck.id, card.id, { s: beforeCheck.current.s });
       beforeCheck.current = null;
@@ -77,7 +77,7 @@ export function Practice({ deck }: { deck: Deck }) {
     setIndex((i) => i - 1);
   }
 
-  /** « Suivant » : on passe à la carte d'après sans la noter ; elle revient plus tard dans la pile. */
+  /** "Suivant" (next): skip to the next card without grading it; it comes back later in the pile. */
   function skip() {
     if (queue.length - index < 2) return;
     const from = Math.min(queue.length, index + 2);
@@ -109,7 +109,7 @@ export function Practice({ deck }: { deck: Deck }) {
     setCheck(ok ? "right" : "wrong");
   }
 
-  // Barre d'espace = OK : « Je sais » (lecture) ou Valider / Suivant (calcul).
+  // Space bar = OK: "Je sais" (reading) or Valider / Suivant (math).
   const onSpace = useRef<() => void>(() => {});
   onSpace.current = () => {
     if (done) return;
@@ -117,7 +117,7 @@ export function Practice({ deck }: { deck: Deck }) {
     if (check) return next(check === "wrong");
     if (value.trim()) onSubmit();
   };
-  // Retour arrière = carte précédente (en calcul : seulement si le champ est vide).
+  // Backspace = previous card (in math: only when the input is empty).
   const onBackspace = useRef<() => void>(() => {});
   onBackspace.current = () => {
     back();
@@ -127,7 +127,7 @@ export function Practice({ deck }: { deck: Deck }) {
       if (e.repeat || (e.code !== "Space" && e.code !== "Backspace")) return;
       const t = e.target as HTMLElement;
       if (e.code === "Space") {
-        if (t.closest("button, a")) return; // le bouton gère déjà l'espace
+        if (t.closest("button, a")) return; // a focused button already handles the space key
         e.preventDefault();
         onSpace.current();
       } else if (!(t instanceof HTMLInputElement && t.value && !t.readOnly)) {

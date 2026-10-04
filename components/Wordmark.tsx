@@ -1,6 +1,6 @@
 const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899", "#3b82f6", "#10b981"];
 
-/** « Fichtre ! » en lettres de couleurs. */
+/** "Fichtre !" in colored letters. */
 export function Wordmark({ as: Tag = "h1", small = false }: { as?: "h1" | "p" | "span"; small?: boolean }) {
   return (
     <Tag className={`wordmark ${small ? "small" : ""}`} aria-label="Fichtre !">

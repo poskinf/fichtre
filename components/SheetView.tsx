@@ -6,12 +6,12 @@ import { setInstruction } from "@/lib/instruction-store";
 import { finishText, useSettings } from "@/lib/settings";
 import { countStatuses, patchEntry, useProgress } from "@/lib/progress";
 import { speak } from "@/lib/speech";
-import { SECTIONS, type Deck } from "@/lib/types";
+import { DEFAULT_SECTION, SECTIONS, type Deck } from "@/lib/types";
 import { Highlight, soundOf } from "./Highlight";
 import { Icon } from "./Icon";
 import { ProgressTop } from "./ProgressTop";
 
-/** La fiche comme sur papier : on entoure ce qu'on sait lire. */
+/** The worksheet as on paper: circle what you can read. */
 export function SheetView({ deck }: { deck: Deck }) {
   const progress = useProgress(deck.id);
   const settings = useSettings();
@@ -43,17 +43,17 @@ export function SheetView({ deck }: { deck: Deck }) {
       <article className="paper">
         <header className="paper-head">
           <h1>{deck.title}</h1>
-          <p className="prenom">
+          <p className="first-name">
             Prénom : <span className={settings.name.trim() ? "name" : ""}>{settings.name.trim()}</span>
           </p>
         </header>
         {SECTIONS.map((sec) => {
-        const cards = deck.cards.filter((c) => (c.group ?? "Mots") === sec.key);
+        const cards = deck.cards.filter((c) => (c.group ?? DEFAULT_SECTION) === sec.key);
         if (cards.length === 0) return null;
         return (
           <section key={sec.key} className="sheet-section" aria-labelledby={`h-${sec.key}`}>
             <h2 id={`h-${sec.key}`}>{sec.title}</h2>
-            <ul className={`sheet-grid ${sec.key === "Phrases" ? "phrases" : ""}`}>
+            <ul className={`sheet-grid ${sec.key === "sentences" ? "sentences" : ""}`}>
               {cards.map((c) => {
                 const status = progress[c.id]?.s;
                 return (

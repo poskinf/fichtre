@@ -1,4 +1,4 @@
-/** Évalue un calcul simple : + − × ÷ (x, *, / acceptés). Retourne null si invalide. */
+/** Evaluates a simple calculation: + − × ÷ (x, *, / accepted). Returns null if invalid. */
 export function evaluate(input: string): number | null {
   const s = input
     .toLowerCase()
@@ -10,7 +10,7 @@ export function evaluate(input: string): number | null {
   if (!/^\d+(\.\d+)?([+\-*/]\d+(\.\d+)?)*$/.test(s)) return null;
   const tokens = s.match(/\d+(\.\d+)?|[+\-*/]/g);
   if (!tokens) return null;
-  // 1re passe : * et /
+  // 1st pass: * and /
   const stack: (number | string)[] = [Number(tokens[0])];
   for (let i = 1; i < tokens.length; i += 2) {
     const op = tokens[i];
@@ -23,7 +23,7 @@ export function evaluate(input: string): number | null {
       stack.push(op, n);
     }
   }
-  // 2e passe : + et -
+  // 2nd pass: + and -
   let result = stack[0] as number;
   for (let i = 1; i < stack.length; i += 2) {
     result = stack[i] === "+" ? result + (stack[i + 1] as number) : result - (stack[i + 1] as number);
@@ -31,7 +31,7 @@ export function evaluate(input: string): number | null {
   return Number.isInteger(result) ? result : Math.round(result * 100) / 100;
 }
 
-/** Affichage joli : "3+1" -> "3 + 1" */
+/** Pretty display: "3+1" -> "3 + 1" */
 export function prettify(expr: string): string {
   return expr
     .replace(/\s+/g, "")
@@ -52,7 +52,7 @@ export function shuffle<T>(arr: readonly T[]): T[] {
 
 export type Op = "+" | "-" | "×";
 
-/** Génère toutes les combinaisons A (min..max) op B (liste). */
+/** Generates every combination A (min..max) op B (list). */
 export function generateCalcs(op: Op, min: number, max: number, bs: number[], both: boolean): string[] {
   const out = new Set<string>();
   for (let a = min; a <= max; a++) {

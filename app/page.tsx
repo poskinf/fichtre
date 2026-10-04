@@ -37,7 +37,7 @@ function DeckCount({ deck }: { deck: Deck }) {
   );
 }
 
-/** « Refaire » : remet la fiche à zéro (n'apparaît que s'il y a déjà une progression). */
+/** "Refaire" (redo): resets the deck to zero. Only shown once there is some progress. */
 function RedoButton({ deck }: { deck: Deck }) {
   const { ok, redo } = countStatuses(deck.cards, useProgress(deck.id));
   if (ok + redo === 0) return null;

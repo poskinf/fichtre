@@ -11,15 +11,15 @@ import { ProgressTop } from "./ProgressTop";
 
 const norm = (v: string | undefined) => (v ?? "").trim().replace(",", ".");
 
-/** Statut d'une ligne : juste, faux, ou pas encore fait si elle est vide. */
+/** Status of a line: right, wrong, or not done yet when it is empty. */
 const statusOf = (c: Card, answer: string | undefined): Status | undefined =>
   !norm(answer) ? undefined : norm(answer) === String(c.answer) ? "ok" : "redo";
 
-/** La fiche de calculs comme sur papier : on écrit les réponses, puis on corrige. */
+/** The math worksheet as on paper: write the answers, then check them. */
 export function MathSheet({ deck }: { deck: Deck }) {
   const progress = useProgress(deck.id);
   const settings = useSettings();
-  // La fiche s'ouvre déjà corrigée si on l'a déjà corrigée ou si des cartes ont été jouées.
+  // The sheet opens already checked if it was checked before or if cards were played.
   const [checked, setChecked] = useState(() => deck.cards.some((c) => progress[c.id]?.s));
 
   const { ok, redo } = countStatuses(deck.cards, progress);
@@ -35,7 +35,7 @@ export function MathSheet({ deck }: { deck: Deck }) {
   }
 
   function onChange(c: Card, answer: string) {
-    // Une fois corrigée, la feuille se met à jour ligne par ligne.
+    // Once checked, the sheet updates line by line.
     patchEntry(deck.id, c.id, { a: answer, ...(checked ? { s: statusOf(c, answer) } : {}) });
   }
 
@@ -57,7 +57,7 @@ export function MathSheet({ deck }: { deck: Deck }) {
       <article className="paper">
         <header className="paper-head">
           <h1>{deck.title}</h1>
-          <p className="prenom">
+          <p className="first-name">
             Prénom : <span className={settings.name.trim() ? "name" : ""}>{settings.name.trim()}</span>
           </p>
         </header>

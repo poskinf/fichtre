@@ -67,7 +67,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .btn.small { min-height: 40px; padding: 0 14px; }
 .btn.toggle[aria-pressed="true"], .btn.toggle[aria-current="page"] { background: var(--ink); color: var(--paper); }
 
-/* Fiches (liste) */
+/* Deck list */
 .deck-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
 .slip {
   position: relative;
@@ -86,7 +86,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 .empty { text-align: center; padding: 32px 16px; background: var(--paper); border: 2px dashed var(--ink); border-radius: var(--radius); }
 
-/* Jeu */
+/* Practice */
 .play { display: grid; gap: 20px; min-height: calc(100dvh - 40px); grid-template-rows: auto 1fr auto; }
 .progress { height: 14px; border: 2px solid var(--ink); border-radius: 99px; background: var(--paper); overflow: hidden; }
 .progress > span { display: block; height: 100%; background: var(--good); transition: width 0.25s; }
@@ -126,7 +126,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .result { text-align: center; display: grid; gap: 16px; padding-top: 24px; }
 .result .score { font-size: clamp(3rem, 16vw, 5rem); font-weight: 700; }
 
-/* Éditeur */
+/* Editor */
 .panel { background: var(--paper); border: 2px solid var(--ink); border-radius: var(--radius); padding: 16px; display: grid; gap: 12px; margin-bottom: 16px; }
 .field { display: grid; gap: 6px; }
 .field label, .field legend { font-weight: 700; }
@@ -134,7 +134,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .field input[type="text"], .field input[type="number"], .field select, .field textarea {
   width: 100%; min-height: 48px; padding: 8px 12px;
   border: 2px solid var(--ink); border-radius: var(--radius); background: #fff;
-  font-size: 1rem; /* 16px : évite le zoom iOS */
+  font-size: 1rem; /* 16px: avoids the iOS zoom */
 }
 .field textarea { min-height: 220px; resize: vertical; }
 .row { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -148,10 +148,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
   * { transition: none !important; animation: none !important; }
 }
 
-/* ---------- Finitions : papier découpé ---------- */
+/* ---------- Finishing touches: cut paper ---------- */
 .slip, .card { position: relative; }
 
-/* ruban adhésif en haut des fiches de l'accueil */
+/* tape at the top of the home page decks */
 .slip::before {
   content: ""; position: absolute; top: -12px; left: 50%;
   width: 72px; height: 22px; transform: translateX(-50%) rotate(-2deg);
@@ -161,7 +161,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 .slip:nth-child(even)::before { transform: translateX(-50%) rotate(3deg); left: 30%; }
 
-/* trait de découpe imprimé sur la fiche, comme sur les feuilles de travail */
+/* printed cut line on the deck, like on worksheets */
 .card::after, .slip::after {
   content: ""; position: absolute; inset: 8px; pointer-events: none;
   border-radius: 3px; border: 2px solid rgba(35, 48, 63, 0.18);
@@ -182,7 +182,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .btn.primary { background: var(--yellow); }
 .panel { border-radius: 10px 4px 10px 4px; box-shadow: 0 4px 0 rgba(35, 48, 63, 0.25); }
 
-/* animations qui répondent à une action */
+/* animations that answer a user action */
 @keyframes pop-in { from { opacity: 0; transform: translateY(14px) rotate(-4deg) scale(0.95); } }
 @keyframes shake { 20%, 60% { translate: -8px 0; } 40%, 80% { translate: 8px 0; } }
 @keyframes bump { 50% { scale: 1.06; } }
@@ -200,7 +200,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .progress > span { background: repeating-linear-gradient(45deg, var(--good) 0 10px, #51cf66 10px 20px); }
 .empty { border-radius: 10px 4px 10px 4px; }
 
-/* ---------- Accueil allégé : toute la fiche est un bouton « jouer » ---------- */
+/* ---------- Lighter home page: the whole deck is a "play" button ---------- */
 .deck-list { gap: 28px; }
 .slip { padding: 0; }
 .slip-link {
@@ -224,7 +224,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .btn.ghost { background: transparent; box-shadow: none; border-color: transparent; text-decoration: underline; min-height: 44px; }
 .btn.ghost[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); text-decoration: none; }
 
-/* ---------- Éditeur : une vraie ligne par carte ---------- */
+/* ---------- Editor: one real row per card ---------- */
 .rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .line { display: flex; align-items: center; gap: 8px; }
 .line input {
@@ -240,29 +240,29 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .line .answer { min-width: 3.4em; }
 .btn.icon { width: 40px; }
 
-/* poignée de glisser-déposer */
+/* drag and drop handle */
 .handle {
   flex: none; width: 36px; min-height: 48px; display: grid; place-items: center;
   border: 0; background: transparent; color: var(--ink-soft); cursor: grab;
-  touch-action: none; /* le doigt déplace la ligne au lieu de faire défiler */
+  touch-action: none; /* a finger moves the row instead of scrolling */
 }
 .handle:active { cursor: grabbing; }
 .line.dragging { position: relative; z-index: 2; background: var(--yellow); border-radius: 8px; box-shadow: 0 6px 0 rgba(35, 48, 63, 0.3); }
 .card.xlong { font-size: clamp(1.4rem, 6.5vw, 2.2rem); line-height: 1.3; aspect-ratio: auto; min-height: 12rem; }
 
-/* ---------- Vue « feuille » : on entoure ce qu'on sait lire ---------- */
+/* ---------- Sheet view: circle what you can read ---------- */
 .sheet-help { margin: -8px 0 20px; display: flex; align-items: center; gap: 10px; font-size: 1.1rem; }
 .sheet-help span { text-decoration: underline; text-underline-offset: 3px; }
 .sheet-section { background: var(--paper); border: 2px solid var(--ink); border-radius: 10px 4px 10px 4px; padding: 14px 14px 18px; margin-bottom: 18px; box-shadow: 0 4px 0 rgba(35, 48, 63, 0.25); }
 .sheet-section h2 { font-size: 1.05rem; text-decoration: underline; text-underline-offset: 3px; margin-bottom: 10px; }
 .sheet-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(5.2rem, 1fr)); gap: 6px; }
-.sheet-grid.phrases { grid-template-columns: 1fr; }
+.sheet-grid.sentences { grid-template-columns: 1fr; }
 .word {
   position: relative; width: 100%; min-height: 52px; padding: 6px 10px;
   border: 2px solid transparent; border-radius: 50%; background: transparent; cursor: pointer;
   font-size: 1.35rem; font-weight: 700; text-align: center;
 }
-.sheet-grid.phrases .word { border-radius: 24px; text-align: left; font-size: 1.15rem; }
+.sheet-grid.sentences .word { border-radius: 24px; text-align: left; font-size: 1.15rem; }
 .word[aria-pressed="true"] { border-color: var(--bad); background: rgba(255, 212, 59, 0.35); animation: bump 0.25s; }
 .sheet-footer { position: sticky; bottom: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0 max(4px, env(safe-area-inset-bottom)); background: linear-gradient(transparent, var(--cork) 30%); }
 .sheet-footer p { margin: 0; font-weight: 700; }
@@ -275,7 +275,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .icon { flex: none; }
 .controls .btn .icon { width: 1.5em; height: 1.5em; }
 
-/* ---------- Feuille de calculs ---------- */
+/* ---------- Math sheet ---------- */
 .calc-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: 10px 14px; }
 .calc { display: flex; align-items: center; gap: 8px; font-size: 1.3rem; font-weight: 700; font-variant-numeric: tabular-nums; padding: 4px 6px; border-radius: 8px; }
 .calc label { white-space: nowrap; }
@@ -291,12 +291,12 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .calc.empty { background: #ffe8cc; }
 .calc.empty .verdict { color: #d9480f; }
 
-/* le son travaillé ressort en gras et en couleur, le reste du mot est plus léger */
+/* the studied sound stands out in bold and color, the rest of the word is lighter */
 .has-sound { font-weight: 400; }
 .sound { font-weight: 700; color: #c2255c; }
 .card .sound { color: var(--ink); text-decoration: underline; text-decoration-thickness: 4px; text-underline-offset: 6px; }
 
-/* ---------- Accueil : la fiche se redresse et se soulève au survol ---------- */
+/* ---------- Home: the deck straightens up and lifts on hover ---------- */
 .slip { transition: transform 0.15s ease-out, box-shadow 0.15s ease-out; }
 .slip:focus-within { transform: rotate(0) translateY(-4px); box-shadow: 0 10px 0 rgba(35, 48, 63, 0.3); }
 .slip-link:focus-visible { outline-offset: -6px; }
@@ -315,7 +315,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .sheet-footer .row { gap: 8px; }
 .sheet-footer p { font-size: 0.95rem; }
 
-/* ---------- Fiche finie ---------- */
+/* ---------- Finished deck ---------- */
 .done-stamp {
   position: absolute; top: -10px; right: 12px; z-index: 2;
   display: inline-flex; align-items: center; gap: 4px; padding: 2px 12px;
@@ -328,7 +328,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   font-weight: 700; color: #1b6b2b;
 }
 
-/* ---------- Charte Fichtre : fond bleu pâle, barre bleue, mascotte ---------- */
+/* ---------- Fichtre look: pale blue background, blue bar, mascot ---------- */
 .appbar {
   position: sticky; top: 0; z-index: 5;
   display: flex; align-items: center; justify-content: space-between;
@@ -363,21 +363,21 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .rail { flex-direction: column; gap: 18px; position: sticky; top: 76px; }
 }
 
-/* ---------- Correctifs après captures ---------- */
+/* ---------- Fixes after screenshots ---------- */
 .topbar h1 { text-wrap: pretty; }
 .sheet .topbar h1, .shell > .topbar h1 { font-size: clamp(1.4rem, 6vw, 2rem); }
 
-/* deux sélecteurs superposés : « Feuille/Cartes » reste sombre, « Entourer/Écouter » devient bleu */
+/* two stacked selectors: "Feuille/Cartes" stays dark, "Entourer/Écouter" turns blue */
 .sheet-mode .btn { min-height: 44px; }
 .sheet-mode .btn.toggle[aria-pressed="true"] { background: #3f9bde; border-color: var(--ink); color: #fff; }
 
-/* pied de page des feuilles : le compteur sur toute la largeur, boutons dessous, fond plein */
+/* sheet footer: counter on the full width, buttons below, solid background */
 .sheet-footer { flex-wrap: wrap; background: var(--cork); border-top: 2px solid var(--ink); margin: 0 -16px; padding: 10px 16px max(10px, env(safe-area-inset-bottom)); }
 .sheet-footer p { flex: 1 1 100%; }
 .sheet-footer .row { flex: 1 1 100%; justify-content: flex-end; }
 .sheet-footer .row > * { flex: 0 0 auto; }
 
-/* feuille de calculs : deux colonnes sur téléphone */
+/* math sheet: two columns on phones */
 .calc-grid { grid-template-columns: repeat(auto-fill, minmax(9.8rem, 1fr)); gap: 6px 10px; }
 .calc { font-size: 1.15rem; gap: 6px; }
 .calc input { width: 2.8em; font-size: 1.15rem; }
@@ -388,15 +388,15 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .result .controls { grid-template-columns: 1fr; }
 
 /* =====================================================================
-   Rendu moderne : surfaces douces, ombres diffuses, coins arrondis,
-   typo ronde (Fredoka) pour l'interface, Andika gardée pour lire.
+   Modern look: soft surfaces, diffuse shadows, rounded corners,
+   round type (Fredoka) for the interface, Andika kept for reading.
    ===================================================================== */
 :root { --font-display: var(--font-fredoka), var(--font-andika), system-ui, sans-serif; --shadow: 0 1px 2px rgba(35, 48, 63, 0.1), 0 8px 24px rgba(35, 48, 63, 0.1); --line: #d3e0ee; }
 
 body { background: linear-gradient(180deg, #e3f1fc 0%, #f5faff 55%) fixed; background-image: none; }
 h1, h2, .btn, .rail-btn, .stars, .wordmark, .done-banner, .done-stamp, .sheet-footer p, .hint, .field label, .field legend, strong { font-family: var(--font-display); }
 
-/* boutons */
+/* buttons */
 .btn { border: 0; border-radius: 16px; box-shadow: var(--shadow); font-weight: 600; transition: transform 0.12s, box-shadow 0.12s, background-color 0.12s; }
 .btn:active { transform: scale(0.97); box-shadow: 0 1px 2px rgba(35, 48, 63, 0.12); }
 .btn.primary { background: #ffd43b; }
@@ -406,7 +406,7 @@ h1, h2, .btn, .rail-btn, .stars, .wordmark, .done-banner, .done-stamp, .sheet-fo
 .btn.toggle[aria-pressed="true"], .btn.toggle[aria-current="page"] { background: #23303f; color: #fff; }
 .btn.ghost { box-shadow: none; }
 
-/* barre du haut */
+/* top bar */
 .appbar { background: rgba(255, 255, 255, 0.82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(35, 48, 63, 0.08); }
 .appbar .btn { background: #eef5fb; box-shadow: none; }
 .appbar .btn[aria-pressed="true"] { background: #23303f; }
@@ -424,7 +424,7 @@ h1, h2, .btn, .rail-btn, .stars, .wordmark, .done-banner, .done-stamp, .sheet-fo
 .hero .wordmark { font-size: clamp(3rem, 13vw, 4.6rem); }
 .tagline { margin: 6px 0 0; color: var(--ink-soft); font-size: 1.05rem; }
 
-/* fiches de l'accueil */
+/* home page decks */
 .slip { border: 0; border-radius: 24px; box-shadow: var(--shadow); transform: none !important; }
 .slip::before, .slip::after { display: none; }
 .slip.tone-0 { background: linear-gradient(135deg, #ffe066, #ffd43b); }
@@ -437,14 +437,14 @@ h1, h2, .btn, .rail-btn, .stars, .wordmark, .done-banner, .done-stamp, .sheet-fo
 @media (hover: hover) { .slip:hover { transform: translateY(-4px) !important; box-shadow: 0 2px 4px rgba(35, 48, 63, 0.1), 0 16px 32px rgba(35, 48, 63, 0.16); } }
 .slip:focus-within { transform: translateY(-4px) !important; }
 
-/* boutons ronds de filtre */
+/* round filter buttons */
 .rail-icon { border: 0; box-shadow: var(--shadow); }
 .rail-words .rail-icon { background: linear-gradient(135deg, #4dabf7, #339af0); }
 .rail-math .rail-icon { background: linear-gradient(135deg, #ff922b, #f76707); }
 .rail-all .rail-icon { background: linear-gradient(135deg, #51cf66, #2f9e44); }
 .rail-btn[aria-pressed="true"] .rail-icon { outline: 4px solid #fff; box-shadow: 0 0 0 7px rgba(35, 48, 63, 0.12), var(--shadow); }
 
-/* cartes de jeu */
+/* practice cards */
 .card { border: 0; }
 .card::after { display: none; }
 .card.tone-0 { background: linear-gradient(135deg, #ffe066, #ffd43b); }
@@ -466,7 +466,7 @@ h1, h2, .btn, .rail-btn, .stars, .wordmark, .done-banner, .done-stamp, .sheet-fo
 .result .score { border: 0; border-radius: 28px; transform: none; background: linear-gradient(135deg, #ffe066, #ffd43b); box-shadow: var(--shadow); }
 .sheet-footer { border-top: 0; box-shadow: 0 -8px 24px rgba(35, 48, 63, 0.08); background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(10px); }
 
-/* champs */
+/* fields */
 .field input[type="text"], .field input[type="number"], .field select, .field textarea, .line input, .line textarea { border: 2px solid var(--line); border-radius: 14px; }
 .field input:focus, .field select:focus, .line input:focus, .line textarea:focus { border-color: #4dabf7; outline: none; }
 .line input, .line textarea { flex: 1 1 8rem; min-width: 0; padding: 8px 12px; background: #fff; font-size: 1.1rem; min-height: 48px; }
@@ -476,7 +476,7 @@ h1, h2, .btn, .rail-btn, .stars, .wordmark, .done-banner, .done-stamp, .sheet-fo
 .calc.right { background: #d3f9d8; } .calc.wrong { background: #ffe3e3; } .calc.empty { background: #fff1de; }
 .word.redo { border-radius: 99px; }
 
-/* grand écran : plus large, fiches sur deux colonnes */
+/* large screens: wider, decks on two columns */
 @media (min-width: 900px) {
   .shell:not(.wide):not(.play) { max-width: 860px; }
   .sheet-grid { grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr)); }
@@ -490,7 +490,7 @@ h1, h2, .btn, .rail-btn, .stars, .wordmark, .done-banner, .done-stamp, .sheet-fo
 .progress { background: #d7e6f4; box-shadow: none; }
 .view-switch, .sheet-mode { max-width: 440px; }
 
-/* Mot entouré : trait épais rouge, bien visible sur fond blanc, façon cercle tracé au stylo */
+/* Circled word: thick red stroke, clearly visible on white, like a pen-drawn circle */
 .word { border: 4px solid transparent; border-radius: 50% 46% 52% 48% / 52% 50% 48% 50%; }
 .word[aria-pressed="true"] {
   border-color: #e03131;
@@ -498,10 +498,10 @@ h1, h2, .btn, .rail-btn, .stars, .wordmark, .done-banner, .done-stamp, .sheet-fo
   box-shadow: 0 0 0 2px #fff, 0 3px 10px rgba(224, 49, 49, 0.35);
   font-weight: 700;
 }
-.sheet-grid.phrases .word { border-radius: 28px; }
+.sheet-grid.sentences .word { border-radius: 28px; }
 .word.redo { border: 4px dashed #f08c00; background: rgba(255, 169, 77, 0.3); }
 
-/* ---------- Interrupteur Feuille / Cartes, pensé pour un enfant ---------- */
+/* ---------- Feuille / Cartes switch, designed for a child ---------- */
 .view-switch {
   display: flex; gap: 4px; padding: 5px; margin: 0 auto 16px; max-width: 380px;
   background: #fff; border-radius: 999px; box-shadow: var(--shadow);
@@ -516,18 +516,18 @@ h1, h2, .btn, .rail-btn, .stars, .wordmark, .done-banner, .done-stamp, .sheet-fo
 .vs-opt[aria-current="page"] { background: #ffd43b; color: var(--ink); box-shadow: 0 2px 8px rgba(245, 159, 0, 0.45); }
 .vs-opt:not([aria-current]):active { background: #eef5fb; }
 
-/* « Entourer / Écouter » : petites pastilles à part, pour ne pas ressembler à l'interrupteur */
+/* "Entourer / Écouter": small separate pills, so they do not look like the switch */
 .sheet-mode { display: flex; gap: 8px; max-width: none; margin-bottom: 12px; }
 .sheet-mode .btn { flex: 0 0 auto; min-height: 44px; padding: 0 18px; border-radius: 999px; box-shadow: none; background: #fff; border: 2px solid var(--line); }
 .sheet-mode .btn.toggle[aria-pressed="true"] { background: #3f9bde; border-color: #3f9bde; color: #fff; }
 
-/* Plus d'interrupteur : de gros boutons qui disent où l'on va */
+/* No more switch: big buttons that say where you are going */
 .play .topbar { gap: 8px; margin-bottom: 8px; }
 .play .topbar .btn { padding: 0 14px; }
 .counter { margin: 0 0 6px; text-align: right; font-family: var(--font-display); font-weight: 600; color: var(--ink-soft); }
 .sheet-footer .row .btn { white-space: nowrap; }
 
-/* Accueil : en bas de la fiche, deux gros choix « Cartes » / « Feuille » */
+/* Home: at the bottom of the deck, two big choices "Cartes" / "Feuille" */
 .slip-head { padding: 20px 20px 4px; }
 .slip-head p { margin: 4px 0 0; font-weight: 400; }
 .slip-choices { display: flex; gap: 10px; padding: 14px 20px 20px; }
@@ -541,7 +541,7 @@ h1, h2, .btn, .rail-btn, .stars, .wordmark, .done-banner, .done-stamp, .sheet-fo
 .btn.icon-only.small { width: 44px; }
 .sheet-title { font-size: clamp(1.4rem, 6vw, 2rem); margin: 0 0 14px; text-wrap: balance; }
 
-/* La barre « × … Cartes / Feuille » reste visible sous l'en-tête et ne bouge pas d'un écran à l'autre */
+/* The "× ... Cartes / Feuille" bar stays visible under the header and does not move between screens */
 .sticky-bar {
   position: sticky; top: 56px; z-index: 4;
   margin: 0 -16px 10px; padding: 8px 16px;
@@ -554,17 +554,17 @@ h1, h2, .btn, .rail-btn, .stars, .wordmark, .done-banner, .done-stamp, .sheet-fo
 .counter-row .counter { margin: 0; }
 .play .sheet-title { margin-bottom: 10px; }
 
-/* même largeur pour la feuille, les cartes, l'éditeur et l'écran de fin */
+/* same width for the sheet, the cards, the editor and the end screen */
 .shell, .shell.play { max-width: 720px; }
 @media (min-width: 900px) { .shell:not(.wide):not(.play) { max-width: 720px; } }
 .shell.wide { max-width: 800px; }
 @media (min-width: 1000px) { .shell.wide { max-width: 1120px; } }
 
-/* boutons « Entourer / Écouter » et consigne centrés */
+/* "Entourer / Écouter" buttons and instruction centered */
 .sheet-mode { justify-content: center; }
 .sheet-help { justify-content: center; text-align: center; }
 
-/* feuille : le pied de page reste collé en bas de l'écran, même si la fiche est courte */
+/* sheet: the footer stays at the bottom of the screen, even for a short deck */
 .sheet-page { display: flex; flex-direction: column; min-height: calc(100dvh - 57px); }
 .sheet-page > .sheet-footer { margin-top: auto; }
 .sheet-page > .sheet-section:last-of-type { margin-bottom: 24px; }
@@ -572,48 +572,48 @@ h1, h2, .btn, .rail-btn, .stars, .wordmark, .done-banner, .done-stamp, .sheet-fo
 .sheet-footer.inline p { flex: 1 1 auto; }
 .sheet-footer.inline .row { flex: 0 0 auto !important; }
 
-/* toutes les cartes ont exactement la même taille : c'est le texte qui s'adapte */
+/* every card has exactly the same size: the text adapts */
 .card, .card.long, .card.xlong { width: min(100%, 420px); aspect-ratio: 4 / 3; min-height: 0; max-height: none; overflow: hidden; }
 .card span { max-width: 100%; }
 .card.long { font-size: clamp(2.4rem, 12vw, 4rem); }
 .card.xlong { font-size: clamp(1.3rem, 6vw, 2rem); line-height: 1.3; padding: 20px; }
 
-/* Accueil : toutes les fiches ont la même hauteur ; « Refaire » est un bouton carré dans la même rangée */
+/* Home: every deck has the same height; "Refaire" is a square button in the same row */
 .deck-list { grid-auto-rows: 1fr; align-items: stretch !important; }
 .slip { display: flex; flex-direction: column; }
 .slip-choices { margin-top: auto; }
 .btn.big.redo-btn { flex: 0 0 56px; padding: 0; }
 
 /* =====================================================================
-   Rendu « post-it / cartes » : papiers de couleur, légèrement penchés,
-   bande collante ou scotch, coin qui se décolle, pile de cartes.
+   "Sticky note / cards" look: colored papers, slightly tilted,
+   sticky strip or tape, peeling corner, pile of cards.
    ===================================================================== */
 :root { --hand: var(--font-hand), var(--font-fredoka), cursive; }
 
-/* --- couleurs des papiers --- */
+/* --- paper colors --- */
 .tone-0 { --note: #ffe94d; }
 .tone-1 { --note: #ffb35c; }
 .tone-2 { --note: #7fcbff; }
 .tone-3 { --note: #d4b8ff; }
 
-/* --- accueil : chaque fiche est un post-it --- */
+/* --- home: every deck is a sticky note --- */
 .slip { --rot: -1.4deg; background: var(--note); border-radius: 4px 4px 4px 22px / 4px 4px 4px 22px; transform: rotate(var(--rot)) !important; box-shadow: 0 1px 1px rgba(35, 48, 63, 0.15), 0 16px 20px -12px rgba(35, 48, 63, 0.45); }
 .slip:nth-child(even) { --rot: 1.1deg; }
 .slip:nth-child(3n) { --rot: -0.4deg; }
 .slip.tone-0, .slip.tone-1, .slip.tone-2, .slip.tone-3 { background: var(--note); }
 .slip h2 { font-family: var(--hand); font-weight: 400; font-size: 1.9rem; line-height: 1.1; }
 .slip-head p { font-size: 1rem; }
-/* bande collante en haut (fiches impaires) / scotch (fiches paires) */
+/* sticky strip at the top (odd decks) / tape (even decks) */
 .slip::before { display: block; content: ""; position: absolute; top: 0; left: 0; right: 0; height: 16px; border-radius: 4px 4px 0 0; background: linear-gradient(rgba(35, 48, 63, 0.12), transparent); pointer-events: none; }
 .slip:nth-child(even)::before { top: -13px; left: 50%; right: auto; width: 92px; height: 28px; border-radius: 2px; transform: translateX(-50%) rotate(-3deg); background: rgba(255, 255, 255, 0.62); box-shadow: 0 1px 2px rgba(35, 48, 63, 0.18); }
-/* coin qui se décolle */
+/* peeling corner */
 .slip::after { display: block; content: ""; position: absolute; right: 0; bottom: 0; width: 38px; height: 38px; border-radius: 0 0 4px 0; background: linear-gradient(135deg, transparent 50%, rgba(35, 48, 63, 0.16) 50%, rgba(255, 255, 255, 0.45)); pointer-events: none; }
 .slip .btn.big { border-radius: 10px; }
 @media (hover: hover) { .slip:hover { transform: rotate(0deg) translateY(-6px) scale(1.01) !important; box-shadow: 0 1px 1px rgba(35, 48, 63, 0.15), 0 22px 26px -14px rgba(35, 48, 63, 0.5); } }
 .slip:focus-within { transform: rotate(0deg) translateY(-6px) !important; }
 .done-stamp { top: -6px; right: 14px; z-index: 3; }
 
-/* --- exercice : la carte est un post-it posé sur une pile --- */
+/* --- practice: the card is a sticky note on top of a pile --- */
 .card { --rot: -1.3deg; background: var(--note); border-radius: 6px 6px 6px 36px / 6px 6px 6px 36px; transform: rotate(var(--rot));
   box-shadow: 6px 7px 0 -1px color-mix(in srgb, var(--note) 82%, #000 8%), 12px 14px 0 -2px color-mix(in srgb, var(--note) 66%, #000 12%), 0 28px 34px -16px rgba(35, 48, 63, 0.5); }
 .card.tone-1, .card.tone-3 { --rot: 1.3deg; }
@@ -626,7 +626,7 @@ h1, h2, .btn, .rail-btn, .stars, .wordmark, .done-banner, .done-stamp, .sheet-fo
 .card.right { animation: bump 0.3s; }
 .stage { padding: 14px 14px 22px 8px; }
 
-/* --- feuille : papier à petits carreaux, comme un cahier --- */
+/* --- sheet: grid paper, like a school notebook --- */
 .sheet-section {
   position: relative; border-radius: 4px 4px 4px 18px;
   background-color: #fffef9;
@@ -640,33 +640,33 @@ h1, h2, .btn, .rail-btn, .stars, .wordmark, .done-banner, .done-stamp, .sheet-fo
 .sheet-section h2 { font-family: var(--hand); font-weight: 400; font-size: 1.5rem; text-decoration: none; display: inline-block; background: linear-gradient(transparent 62%, rgba(255, 233, 77, 0.8) 62%); padding: 0 4px; }
 .calc-grid, .sheet-grid { position: relative; }
 
-/* consigne : petit post-it jaune */
+/* instruction: small yellow sticky note */
 .sheet-help span { text-decoration: none; background: #fff3a3; padding: 6px 12px; border-radius: 3px; box-shadow: 0 1px 1px rgba(35, 48, 63, 0.15), 0 8px 10px -8px rgba(35, 48, 63, 0.4); transform: rotate(-0.8deg); font-family: var(--hand); font-size: 1.25rem; }
 @media (prefers-reduced-motion: reduce) { .slip, .card { transition: none; } }
 
-/* le coin qui se décolle vient en bas à droite (on annule les anciennes règles « trait de coupe ») */
+/* the peeling corner goes bottom right (cancels the old "cut line" rules) */
 .slip::after, .card::after { inset: auto 0 0 auto; border: 0; }
 
-/* correctifs post-it : bande collante pleine largeur sans reste de l'ancien ruban ; pas de défilement horizontal */
+/* sticky note fixes: full-width sticky strip without leftovers of the old tape; no horizontal scrolling */
 .slip::before { width: auto; transform: none; border: 0; }
 .slip:nth-child(even)::before { width: 92px; border-left: 2px dotted rgba(35, 48, 63, 0.18); border-right: 2px dotted rgba(35, 48, 63, 0.18); transform: translateX(-50%) rotate(-3deg); }
 html, body { overflow-x: clip; }
 
-/* l'écran de jeu ne doit jamais dépasser la largeur de l'écran (le champ de réponse imposait sa largeur) */
+/* the practice screen must never exceed the screen width (the answer input forced its width) */
 .shell.play { grid-template-columns: minmax(0, 1fr); }
 .shell.play > * { min-width: 0; }
 .answer-row input { width: 0; flex: 1 1 0; }
 
-/* plus d'air entre les post-it de l'accueil (ils sont penchés et ont du scotch qui dépasse) */
+/* more space between the home page sticky notes (they are tilted and their tape sticks out) */
 .deck-list { gap: 44px; padding-top: 14px; }
 @media (min-width: 1000px) { .deck-list { gap: 48px 40px; } }
 
-/* feuille : le dernier papier s'étire jusqu'au pied de page, même quand il y a peu de mots */
+/* sheet: the last paper stretches down to the footer, even with few words */
 .sheet-page > section.sheet-section:last-of-type { flex: 1 0 auto; margin-bottom: 20px; }
 
 /* =====================================================================
-   La feuille est UNE vraie page : en-tête (titre, prénom), parties encadrées,
-   trous de classeur, papier à petits carreaux, elle descend jusqu'au pied de page.
+   The sheet is ONE real page: header (title, first name), framed sections,
+   binder holes, grid paper, and it extends down to the footer.
    ===================================================================== */
 .paper {
   position: relative; flex: 1 0 auto; margin: 6px 0 20px; padding: 22px 18px 26px 38px;
@@ -684,30 +684,30 @@ html, body { overflow-x: clip; }
 .paper::before { content: ""; position: absolute; top: -11px; left: 50%; width: 92px; height: 26px; transform: translateX(-50%) rotate(-2deg); background: rgba(255, 224, 102, 0.85); box-shadow: 0 1px 2px rgba(35, 48, 63, 0.2); }
 .paper-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
 .paper-head h1 { font-family: var(--hand); font-weight: 400; font-size: clamp(1.9rem, 8vw, 2.6rem); line-height: 1.05; }
-.prenom { margin: 0; display: flex; align-items: flex-end; gap: 6px; font-family: var(--hand); font-size: 1.2rem; color: var(--ink-soft); }
-.prenom span { display: inline-block; width: 7.5rem; border-bottom: 2px solid var(--ink-soft); height: 1.2em; }
+.first-name { margin: 0; display: flex; align-items: flex-end; gap: 6px; font-family: var(--hand); font-size: 1.2rem; color: var(--ink-soft); }
+.first-name span { display: inline-block; width: 7.5rem; border-bottom: 2px solid var(--ink-soft); height: 1.2em; }
 .paper .sheet-help { margin: 4px 0 14px; justify-content: flex-start; text-align: left; }
 .paper .sheet-help span { transform: none; background: none; box-shadow: none; padding: 0; text-decoration: underline; text-underline-offset: 4px; font-size: 1.15rem; }
 
-/* parties : titre souligné au-dessus d'un cadre, comme sur la feuille de travail */
+/* sections: underlined title above a frame, like on the worksheet */
 .paper .sheet-section { background: none; box-shadow: none; border-radius: 0; padding: 0; margin: 0 0 20px; }
 .paper .sheet-section::before { display: none; }
 .paper .sheet-section h2 { background: none; font-size: 1.3rem; text-decoration: underline; text-underline-offset: 4px; padding: 0; margin-bottom: 8px; }
 .paper .sheet-grid, .paper .calc-grid { padding: 10px 8px; border: 2px solid #3a4a5c; border-radius: 8px; background: rgba(255, 254, 249, 0.85); }
 .paper .calc-grid { padding: 12px; }
 
-/* pas de cadre autour des mots / des calculs : ils sont écrits directement sur la page */
+/* no frame around the words / calculations: they are written directly on the page */
 .paper .sheet-grid, .paper .calc-grid { border: 0; border-radius: 0; background: none; padding: 4px 0; }
 
-/* feuille : une page de papier, sans scotch ni autocollant */
+/* sheet: a page of paper, without tape or stickers */
 .paper::before, .paper .sheet-section::before { display: none; }
 
 /* =====================================================================
-   En-tête et pied de page retravaillés
+   Reworked header and footer
    ===================================================================== */
 :root { --appbar-h: 60px; }
 
-/* --- en-tête : logo à gauche, mode parent + étoiles à droite --- */
+/* --- header: logo on the left, parent mode + stars on the right --- */
 .appbar { height: var(--appbar-h); padding-top: env(safe-area-inset-top); box-sizing: content-box; background: rgba(255, 255, 255, 0.94); border-bottom: 0; box-shadow: 0 1px 0 rgba(35, 48, 63, 0.06), 0 10px 24px -16px rgba(35, 48, 63, 0.35); }
 .brand { gap: 10px; padding: 4px 8px 4px 0; }
 .appbar-right { gap: 8px; }
@@ -716,11 +716,11 @@ html, body { overflow-x: clip; }
 .stars { min-height: 44px; padding: 0 14px; font-size: 1.25rem; background: #fff3c4; box-shadow: inset 0 0 0 2px #ffd43b; }
 @media (max-width: 380px) { .parent-badge { display: none; } }
 
-/* la barre « × … Cartes / Feuille » prolonge l'en-tête : même fond, collée dessous */
+/* the "× ... Cartes / Feuille" bar extends the header: same background, stuck below it */
 .sticky-bar { top: var(--appbar-h); margin-top: -16px; background: rgba(255, 255, 255, 0.94); box-shadow: 0 10px 20px -16px rgba(35, 48, 63, 0.35); }
 .sheet-page { min-height: calc(100dvh - var(--appbar-h)); }
 
-/* --- pied de page des feuilles : progression visuelle + actions --- */
+/* --- sheet footer: visual progress + actions --- */
 .sheet-footer {
   display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; flex-wrap: nowrap;
   margin: 0 -16px; padding: 14px 16px max(14px, env(safe-area-inset-bottom));
@@ -740,7 +740,7 @@ html, body { overflow-x: clip; }
 .summary .dot.seg-todo { background: #cdd9e5; }
 @media (min-width: 900px) { .sheet-footer { border-radius: 22px; margin: 0 0 16px; } }
 
-/* --- barre de navigation : correctifs --- */
+/* --- navigation bar: fixes --- */
 .brand .wordmark { white-space: nowrap; }
 .appbar .btn.icon-only[aria-pressed="true"] { background: #23303f; color: #fff; }
 .appbar-right .btn.small:not(.icon-only) { border-radius: 99px; min-height: 44px; background: #fff3c4; box-shadow: inset 0 0 0 2px #ffd43b; }
@@ -752,13 +752,13 @@ html, body { overflow-x: clip; }
 .appbar-left { display: flex; align-items: center; gap: 6px; min-width: 0; }
 .appbar-left .brand { padding-right: 0; }
 
-/* « Journal de classe » : retour à la liste des fiches, à droite du logo */
+/* "Journal de classe": back to the deck list, on the right of the logo */
 .journal-btn { border-radius: 99px; min-height: 44px; background: #eef5fb; box-shadow: none; white-space: nowrap; }
 .appbar-left { gap: 10px; }
-/* sur petit écran, le mot « Fichtre! » laisse la place au bouton (la mascotte reste) */
+/* on small screens, the word "Fichtre!" makes room for the button (the mascot stays) */
 @media (max-width: 480px) { .appbar.deck .brand .wordmark { display: none; } }
 
-/* --- cartes : Précédent | Écouter | Suivant sur une même rangée --- */
+/* --- cards: Précédent | Écouter | Suivant on one row --- */
 .tool-row { display: grid; grid-template-columns: 1fr 1.25fr 1fr; gap: 8px; }
 .tool {
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
@@ -773,7 +773,7 @@ html, body { overflow-x: clip; }
 .nav-row .btn { min-height: 60px; font-size: 1.1rem; }
 .counter-row { justify-content: flex-end; }
 
-/* sur une fiche : logo à gauche, « Journal de classe » au centre, Cartes / Feuille à droite */
+/* on a deck: logo on the left, "Journal de classe" in the center, Cartes / Feuille on the right */
 .appbar.deck { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 8px; }
 .appbar.deck .appbar-left { justify-self: start; }
 .appbar.deck .appbar-right { justify-self: end; margin-left: 0; }
@@ -781,7 +781,7 @@ html, body { overflow-x: clip; }
 .appbar.deck .btn .icon { width: 1.2em; height: 1.2em; }
 @media (max-width: 380px) { .appbar.deck .journal-btn .icon { display: none; } }
 
-/* --- feuilles : même barre de progression au-dessus, actions regroupées en bas (comme les cartes) --- */
+/* --- sheets: same progress bar on top, actions grouped at the bottom (like the cards) --- */
 .progress-top { margin: 0 0 12px; }
 .sheet-page > .progress-top { margin-top: 2px; }
 .sheet-footer.actions { display: block; padding-top: 12px; }
@@ -793,17 +793,17 @@ html, body { overflow-x: clip; }
 .tool-row.two-eq { grid-template-columns: 1fr 1fr; }
 .btn.big-action.wide { width: 100%; }
 
-/* --- la consigne vit dans l'en-tête : toujours visible, même quand on défile --- */
+/* --- the instruction lives in the header: always visible, even when scrolling --- */
 .appbar { height: auto; min-height: 60px; box-sizing: border-box; padding: calc(8px + env(safe-area-inset-top)) 16px 8px; align-content: start; }
 .appbar-instruction { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; padding: 6px 0 2px; border-top: 1px solid rgba(35, 48, 63, 0.08); margin-top: 6px; width: 100%; }
 .appbar:not(.deck) .appbar-instruction { display: none; }
 .appbar-instruction p { margin: 0; font-family: var(--hand); font-size: 1.2rem; line-height: 1.2; text-decoration: underline; text-decoration-color: rgba(35, 48, 63, 0.35); text-underline-offset: 4px; }
 .appbar-instruction .btn.icon-only { width: 40px; min-height: 40px; flex: none; background: #eef5fb; }
 body:has(.appbar-instruction) { --appbar-h: 118px; }
-/* Entourer / Écouter : mêmes gros boutons que « Corriger » (jaune = mode actif) */
+/* Entourer / Écouter: same big buttons as "Corriger" (yellow = active mode) */
 .action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-/* Précédent | Écouter | Suivant : même style que « À revoir / Je sais » (icône à gauche du texte, boutons colorés) */
+/* Précédent | Écouter | Suivant: same style as "À revoir / Je sais" (icon left of the text, colored buttons) */
 .tool-row { grid-template-columns: auto 1fr auto; gap: 8px; }
 .tool { flex-direction: row; gap: 6px; min-height: 60px; padding: 0 14px; border-radius: 16px; font-size: 1rem; box-shadow: var(--shadow); white-space: nowrap; }
 .tool .icon { width: 1.3em; height: 1.3em; }
@@ -817,11 +817,11 @@ body:has(.appbar-instruction) { --appbar-h: 118px; }
 .tool { justify-content: center; }
 @media (max-width: 380px) { .tool { padding: 0 6px; } }
 
-/* pied de page des feuilles : plus de bandeau blanc, les boutons flottent sur la page */
+/* sheet footer: no white strip, the buttons float over the page */
 .sheet-footer, .sheet-footer.actions { background: none; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; border-radius: 0; pointer-events: none; padding-top: 6px; }
 .sheet-footer > * { pointer-events: auto; }
 
-/* feuille : plus d'espace entre l'en-tête, les titres de parties et les mots */
+/* sheet: more space between the header, the section titles and the words */
 .paper { padding-top: 30px; }
 .paper-head { margin-bottom: 26px; }
 .paper .sheet-section { margin-bottom: 34px; }
@@ -829,14 +829,14 @@ body:has(.appbar-instruction) { --appbar-h: 118px; }
 .paper .sheet-grid { row-gap: 14px; padding-top: 6px; }
 .paper .calc-grid { row-gap: 12px; padding-top: 6px; }
 .paper .sheet-grid { column-gap: 14px; }
-@media (min-width: 700px) { .paper .sheet-grid:not(.phrases) { grid-template-columns: repeat(auto-fill, minmax(8.2rem, 1fr)); } }
+@media (min-width: 700px) { .paper .sheet-grid:not(.sentences) { grid-template-columns: repeat(auto-fill, minmax(8.2rem, 1fr)); } }
 
 /* =====================================================================
-   Mot entouré, dans le nouveau style : pastille douce, vert = réussi, orange = à corriger
-   (mêmes couleurs que les lignes de la feuille de calculs)
+   Circled word, in the new style: soft pill, green = done, orange = to redo
+   (same colors as the lines of the math sheet)
    ===================================================================== */
 .word { border: 3px solid transparent; border-radius: 999px; transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s; }
-.sheet-grid.phrases .word { border-radius: 22px; }
+.sheet-grid.sentences .word { border-radius: 22px; }
 .word[aria-pressed="true"] {
   border-color: #37b24d; background: #d3f9d8; font-weight: 700; color: var(--ink);
   box-shadow: 0 3px 10px rgba(55, 178, 77, 0.28);
@@ -855,10 +855,10 @@ body:has(.appbar-instruction) { --appbar-h: 118px; }
 }
 .word:not([aria-pressed="true"]):not(.redo):active { background: #eef5fb; }
 
-/* --- prénom écrit à la main sur la ligne « Prénom » de la feuille --- */
-.prenom span.name { width: auto; min-width: 7.5rem; height: auto; padding: 0 10px; font-size: 1.6rem; line-height: 1.1; color: #1d4ed8; border-bottom-color: var(--ink-soft); transform: rotate(-1.5deg); }
+/* --- first name handwritten on the "Prénom" line of the sheet --- */
+.first-name span.name { width: auto; min-width: 7.5rem; height: auto; padding: 0 10px; font-size: 1.6rem; line-height: 1.1; color: #1d4ed8; border-bottom-color: var(--ink-soft); transform: rotate(-1.5deg); }
 
-/* --- réglages --- */
+/* --- settings --- */
 .preview { background: #fff; }
 .preview-card { display: grid; justify-items: center; gap: 8px; padding: 8px 0 4px; }
 .preview-card .done-banner { margin: 0; text-align: center; }

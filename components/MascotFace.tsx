@@ -1,4 +1,4 @@
-/** Le visage de Fichtre seul : pour la barre du haut et l'icône de l'onglet. */
+/** Fichtre's face alone: used in the top bar and as the tab icon. */
 export function MascotFace({ size = 36 }: { size?: number }) {
   return (
     <svg viewBox="0 0 200 175" width={size} height={(size * 175) / 200} aria-hidden="true" style={{ display: "block" }}>

@@ -12,7 +12,7 @@ import { Icon } from "./Icon";
 import { MascotFace } from "./MascotFace";
 import { Wordmark } from "./Wordmark";
 
-/** Barre de navigation : logo ; sur une fiche, × Quitter et le bouton Cartes / Feuille ; mode parent et fiches finies. */
+/** Navigation bar: logo; on a deck, the journal button and the Cartes / Feuille button; parent mode and finished decks. */
 export function SiteHeader() {
   const pathname = usePathname();
   const deckPage = pathname.match(/^\/(sheet|play)\/([^/]+)/);

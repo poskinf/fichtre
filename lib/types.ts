@@ -2,26 +2,31 @@ export type DeckKind = "words" | "math";
 
 export type Card = {
   id: string;
-  /** Mot à lire, ou calcul (ex: "3 + 1") */
+  /** Word to read, or calculation (e.g. "3 + 1") */
   front: string;
-  /** Réponse attendue (calculs uniquement) */
+  /** Expected answer (calculations only) */
   answer?: string;
-  /** Partie de la fiche : "Syllabes", "Mots" ou "Phrases" (lecture uniquement) */
-  group?: string;
+  /** Section of the deck: "syllables", "words" or "sentences" (reading decks only) */
+  group?: SectionKey;
 };
 
 export type Deck = {
   id: string;
   title: string;
-  /** Son à mettre en gras dans les mots (lecture), ex. "u" */
+  /** Sound to put in bold in the words (reading), e.g. "u" */
   sound?: string;
   kind: DeckKind;
   cards: Card[];
 };
 
-/** Parties d'une fiche de lecture, dans l'ordre de la feuille. */
+/** Sections of a reading deck, in the order they appear on the sheet. `title`, `noun` and `placeholder` are UI text (French). */
 export const SECTIONS = [
-  { key: "Syllabes", title: "Je lis des syllabes.", placeholder: "lu" },
-  { key: "Mots", title: "Je lis des mots.", placeholder: "tube" },
-  { key: "Phrases", title: "Je lis des phrases.", placeholder: "Tu as lu un livre sur le mur." },
+  { key: "syllables", title: "Je lis des syllabes.", noun: "syllabe", placeholder: "lu" },
+  { key: "words", title: "Je lis des mots.", noun: "mot", placeholder: "tube" },
+  { key: "sentences", title: "Je lis des phrases.", noun: "phrase", placeholder: "Tu as lu un livre sur le mur." },
 ] as const;
+
+export type SectionKey = (typeof SECTIONS)[number]["key"];
+
+/** Section a card without a `group` belongs to. */
+export const DEFAULT_SECTION: SectionKey = "words";

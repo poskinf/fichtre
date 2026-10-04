@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 let loading: Promise<Set<string>> | null = null;
 
-/** Liste de mots français (public/fr-words.txt), chargée une seule fois et seulement si besoin. */
+/** French word list (public/fr-words.txt), loaded once and only when needed. */
 function loadWords(): Promise<Set<string>> {
   loading ??= fetch("/fr-words.txt")
     .then((r) => (r.ok ? r.text() : Promise.reject(new Error(String(r.status)))))
@@ -16,7 +16,7 @@ function loadWords(): Promise<Set<string>> {
   return loading;
 }
 
-/** `null` tant que le dictionnaire n'est pas chargé (ou indisponible) : on ne signale alors rien. */
+/** `null` until the dictionary is loaded (or if it is unavailable): nothing is flagged then. */
 export function useWords(enabled: boolean): Set<string> | null {
   const [words, setWords] = useState<Set<string> | null>(null);
   useEffect(() => {
@@ -30,7 +30,7 @@ export function useWords(enabled: boolean): Set<string> | null {
   return words;
 }
 
-/** Vrai si le mot est inconnu du dictionnaire (« l'ami », « grand-mère » : on vérifie chaque partie). */
+/** True if the word is unknown to the dictionary ("l'ami", "grand-mère": each part is checked). */
 export function isUnknown(text: string, words: Set<string>): boolean {
   const t = text.trim().toLowerCase();
   if (!t || words.has(t)) return false;

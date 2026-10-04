@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { newId, parseCards, saveDeck } from "@/lib/decks";
 import { generateCalcs, type Op } from "@/lib/math";
-import { SECTIONS, type Card, type Deck, type DeckKind } from "@/lib/types";
+import { DEFAULT_SECTION, SECTIONS, type Card, type Deck, type DeckKind } from "@/lib/types";
 import { RowList, toRows, type Row } from "./RowList";
 
 const MATH = "calc";
@@ -18,12 +18,12 @@ const parseList = (s: string) =>
     .map(Number)
     .filter((n) => Number.isInteger(n) && n >= 0);
 
-/** Une liste de lignes par partie : une seule pour les calculs, trois pour la lecture. */
+/** One list of rows per section: a single one for math, three for reading. */
 function initialLists(deck?: Deck): Record<string, Row[]> {
   const lists: Record<string, Row[]> = {};
   for (const k of KEYS) {
     const key = deck?.kind === "math" ? (k === MATH ? k : null) : k === MATH ? null : k;
-    const fronts = key && deck ? deck.cards.filter((c) => (deck.kind === "math" ? true : (c.group ?? "Mots") === k)).map((c) => c.front) : [];
+    const fronts = key && deck ? deck.cards.filter((c) => (deck.kind === "math" ? true : (c.group ?? DEFAULT_SECTION) === k)).map((c) => c.front) : [];
     lists[k] = toRows(fronts.length ? fronts : [""]);
   }
   return lists;
@@ -39,7 +39,7 @@ export function DeckEditor({ deck }: { deck?: Deck }) {
   const setList = (key: string) => (update: (rows: Row[]) => Row[]) =>
     setLists((all) => ({ ...all, [key]: update(all[key]) }));
 
-  // Générateur de calculs
+  // Calculation generator
   const [op, setOp] = useState<Op>("+");
   const [min, setMin] = useState(0);
   const [max, setMax] = useState(9);
@@ -50,7 +50,7 @@ export function DeckEditor({ deck }: { deck?: Deck }) {
     kind === "math"
       ? parseCards("math", lists[MATH].map((r) => r.text).join("\n"))
       : SECTIONS.flatMap((sec) =>
-          parseCards("words", lists[sec.key].map((r) => r.text).join("\n"), sec.key !== "Phrases").map((c) => ({ ...c, group: sec.key })),
+          parseCards("words", lists[sec.key].map((r) => r.text).join("\n"), sec.key !== "sentences").map((c) => ({ ...c, group: sec.key })),
         );
 
   function generate() {
@@ -61,8 +61,8 @@ export function DeckEditor({ deck }: { deck?: Deck }) {
 
   function save(e: React.FormEvent) {
     e.preventDefault();
-    // Une carte inchangée garde son identifiant, donc sa progression.
-    const known = new Map((deck?.cards ?? []).map((c) => [`${c.group ?? (deck?.kind === "words" ? "Mots" : "")}|${c.front}`, c.id]));
+    // An unchanged card keeps its id, and therefore its progress.
+    const known = new Map((deck?.cards ?? []).map((c) => [`${c.group ?? (deck?.kind === "words" ? DEFAULT_SECTION : "")}|${c.front}`, c.id]));
     const kept = cards.map((c) => ({ ...c, id: known.get(`${c.group ?? ""}|${c.front}`) ?? c.id }));
     saveDeck({ id: deck?.id ?? newId(), title: title.trim() || "Ma fiche", kind, cards: kept, ...(kind === "words" && sound.trim() ? { sound: sound.trim() } : {}) });
     router.push("/");
@@ -165,11 +165,11 @@ export function DeckEditor({ deck }: { deck?: Deck }) {
                 rows={lists[sec.key]}
                 setRows={setList(sec.key)}
                 math={false}
-                spellcheck={sec.key === "Mots"}
-                multiline={sec.key === "Phrases"}
-                noun={sec.key === "Mots" ? "mot" : sec.key === "Syllabes" ? "syllabe" : "phrase"}
+                spellcheck={sec.key === "words"}
+                multiline={sec.key === "sentences"}
+                noun={sec.noun}
                 placeholder={sec.placeholder}
-                hint={sec.key === "Phrases" ? "Une phrase par ligne." : sec.key === "Mots" ? "Entrée ajoute une ligne. Un mot inconnu du dictionnaire est marqué « à vérifier » : vous pouvez le garder." : "Entrée ajoute une ligne. Collez une liste : une ligne par entrée."}
+                hint={sec.key === "sentences" ? "Une phrase par ligne." : sec.key === "words" ? "Entrée ajoute une ligne. Un mot inconnu du dictionnaire est marqué « à vérifier » : vous pouvez le garder." : "Entrée ajoute une ligne. Collez une liste : une ligne par entrée."}
               />
             </div>
           ))

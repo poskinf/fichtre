@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 
-/** Consigne de la feuille affichée dans l'en-tête : la page la publie, l'en-tête la lit. */
+/** The sheet's instruction shown in the header: the page publishes it, the header reads it. */
 let current: string | null = null;
 const listeners = new Set<() => void>();
 

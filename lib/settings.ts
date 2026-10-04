@@ -3,9 +3,9 @@
 import { useSyncExternalStore } from "react";
 
 export type Settings = {
-  /** Prénom de l'enfant, écrit sur les feuilles */
+  /** The child's first name, written on the sheets */
   name: string;
-  /** Message quand une fiche est finie ; {nom} est remplacé par le prénom */
+  /** Message shown when a deck is finished. `{nom}` is the (French) placeholder replaced by the first name. */
   finishMessage: string;
 };
 
@@ -31,7 +31,7 @@ export function saveSettings(patch: Partial<Settings>) {
   try {
     localStorage.setItem(KEY, JSON.stringify(cache));
   } catch {
-    /* stockage indisponible : on garde en mémoire */
+    /* storage unavailable: keep it in memory */
   }
   listeners.forEach((l) => l());
 }
@@ -44,7 +44,7 @@ export function useSettings(): Settings {
   );
 }
 
-/** Message de fin de fiche, avec le prénom (ou sans, s'il n'est pas renseigné). */
+/** Finish message with the first name filled in (or without it when no name is set). */
 export function finishText(s: Settings): string {
   const template = s.finishMessage.trim() || DEFAULT_FINISH_MESSAGE;
   const name = s.name.trim();
@@ -52,9 +52,9 @@ export function finishText(s: Settings): string {
 }
 
 /**
- * Nom du journal avec le prénom : « Journal de classe d'Emma » (accueil, réglages).
- * `short` donne « Journal d'Emma », pour l'en-tête où la place manque.
- * Sans prénom : « Journal de classe ».
+ * Title of the journal with the first name: "Journal de classe d'Emma" (home, settings).
+ * `short` gives "Journal d'Emma" for the header, where space is tight.
+ * Without a first name: "Journal de classe".
  */
 export function journalTitle(s: Settings, short = false): string {
   const name = s.name.trim();

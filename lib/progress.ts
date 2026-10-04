@@ -3,9 +3,9 @@
 import { useSyncExternalStore } from "react";
 import type { Card } from "./types";
 
-/** ok = réussi, redo = à corriger ; pas d'entrée = pas encore fait. */
+/** ok = done, redo = to redo; no entry = not done yet. */
 export type Status = "ok" | "redo";
-export type Entry = { s?: Status; /** réponse tapée sur la feuille de calculs */ a?: string };
+export type Entry = { s?: Status; /** answer typed on the math sheet */ a?: string };
 export type DeckProgress = Record<string, Entry>;
 
 const KEY = "fichtre.progress.v1";
@@ -29,7 +29,7 @@ function write(next: Record<string, DeckProgress>) {
   try {
     localStorage.setItem(KEY, JSON.stringify(next));
   } catch {
-    /* stockage indisponible : on garde en mémoire */
+    /* storage unavailable: keep it in memory */
   }
   listeners.forEach((l) => l());
 }
@@ -42,7 +42,7 @@ export function useProgress(deckId: string): DeckProgress {
   );
 }
 
-/** Toute la progression (pour compter les fiches finies sur l'accueil). */
+/** All the progress (to count finished decks on the home page). */
 export function useAllProgress(): Record<string, DeckProgress> {
   return useSyncExternalStore(
     (cb) => (listeners.add(cb), () => void listeners.delete(cb)),
@@ -53,7 +53,7 @@ export function useAllProgress(): Record<string, DeckProgress> {
 
 export const getProgress = (deckId: string): DeckProgress => read()[deckId] ?? EMPTY;
 
-/** Modifie plusieurs cartes d'un coup ; une valeur `undefined` efface le champ. */
+/** Updates several cards at once; an `undefined` value clears the field. */
 export function patchEntries(deckId: string, updates: Record<string, Partial<Entry>>) {
   const deck = { ...getProgress(deckId) };
   for (const [cardId, patch] of Object.entries(updates)) {

@@ -14,7 +14,7 @@ export type SetRows = (update: (rows: Row[]) => Row[]) => void;
 
 export const toRows = (lines: string[]): Row[] => lines.map((text) => ({ id: newId(), text }));
 
-/** Réponse affichée à droite d'un calcul : fixée avec « = » ou calculée. */
+/** Answer shown next to a calculation: set explicitly with "=" or computed. */
 function answerOf(text: string): string | null {
   const [expr, explicit] = text.split("=").map((s) => s.trim());
   if (!expr) return null;
@@ -24,7 +24,7 @@ function answerOf(text: string): string | null {
 
 type FieldProps = React.InputHTMLAttributes<HTMLInputElement> & React.TextareaHTMLAttributes<HTMLTextAreaElement> & { multiline: boolean };
 
-/** Champ d'une ligne : une ligne simple, ou une zone qui grandit avec le texte (phrases). */
+/** Row field: a single-line input, or a textarea that grows with its text (sentences). */
 function Field({ multiline, ...props }: FieldProps) {
   const ref = useRef<HTMLTextAreaElement>(null);
   useLayoutEffect(() => {
@@ -59,14 +59,14 @@ type Props = {
   rows: Row[];
   setRows: SetRows;
   math: boolean;
-  /** Nom d'une ligne pour les lecteurs d'écran : "mot", "syllabe"… */
+  /** Name of a row for screen readers (UI text): "mot", "syllabe"... */
   noun: string;
   placeholder: string;
-  /** Une virgule sépare-t-elle deux entrées au collage ? */
+  /** Help text shown under the list (UI text). */
   hint: string;
-  /** Signale les mots absents du dictionnaire français. */
+  /** Flags words that are missing from the French dictionary. */
   spellcheck?: boolean;
-  /** Phrases : le champ s'agrandit pour montrer tout le texte. */
+  /** Sentences: the field grows to show all of its text. */
   multiline?: boolean;
 };
 
@@ -88,7 +88,7 @@ export function RowList({ rows, setRows, math, noun, placeholder, hint, spellche
     setRows((rs) => arrayMove(rs, rs.findIndex((r) => r.id === active.id), rs.findIndex((r) => r.id === over.id)));
   }
 
-  /** Insère des lignes après `afterId` (ou à la fin) et met le focus sur la dernière. */
+  /** Inserts rows after `afterId` (or at the end) and focuses the last one. */
   function insertRows(afterId: string | null, lines: string[]) {
     const created = toRows(lines);
     setRows((rs) => {
@@ -113,7 +113,7 @@ export function RowList({ rows, setRows, math, noun, placeholder, hint, spellche
     }
   }
 
-  /** Coller plusieurs lignes d'un coup crée une ligne par entrée. */
+  /** Pasting several lines at once creates one row per line. */
   function onPaste(e: React.ClipboardEvent<HTMLInputElement | HTMLTextAreaElement>, r: Row) {
     const lines = e.clipboardData.getData("text").split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
     if (lines.length < 2) return;

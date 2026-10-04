@@ -1,4 +1,4 @@
-/** Compteur + barre de progression : identiques sur les cartes et sur les feuilles. */
+/** Counter + progress bar: identical on the cards and on the sheets. */
 export function ProgressTop({ label, value, max }: { label: string; value: number; max: number }) {
   return (
     <div className="progress-top">

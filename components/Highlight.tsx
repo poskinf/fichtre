@@ -1,11 +1,11 @@
 const base = (c: string) => c.normalize("NFD")[0].toLowerCase();
 
-/** Son à mettre en gras : celui du champ « sound », sinon celui du titre (« Le son u : la lune »). */
+/** Sound to put in bold: the deck's `sound` field, otherwise the one in the title ("Le son u : la lune"). */
 export function soundOf(deck: { sound?: string; title: string }): string {
   return (deck.sound ?? deck.title.match(/\bson\s+(\S+?)\s*(?::|$)/i)?.[1] ?? "").trim();
 }
 
-/** Met en gras chaque occurrence du son, sans tenir compte des accents ni des majuscules. */
+/** Bolds every occurrence of the sound, ignoring accents and case. */
 export function Highlight({ text, sound }: { text: string; sound: string }) {
   const chars = [...text];
   const target = [...sound].map(base);
