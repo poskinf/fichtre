@@ -7,12 +7,24 @@ export type Settings = {
   name: string;
   /** Message shown when a deck is finished. `{nom}` is the (French) placeholder replaced by the first name. */
   finishMessage: string;
+  /** How reading cards are shown: normally, as a flash (word hidden after `seconds`), or spelled letter by letter */
+  readMode: ReadMode;
+  /** Seconds before the word or the letters disappear (flash and spelling modes) */
+  seconds: number;
+  /** How calculation cards are shown: normally, or as a flash (calculation fades out after `calcSeconds`) */
+  calcMode: "normal" | "flash";
+  /** Seconds before the calculation disappears (flash mode) */
+  calcSeconds: number;
+  /** Number of words shown on each reading card (1 to 5) */
+  wordsPerCard: number;
 };
+
+export type ReadMode = "normal" | "flash" | "spell";
 
 export const DEFAULT_FINISH_MESSAGE = "Bravo {nom} ! Fiche terminée.";
 
 const KEY = "fichtre.settings.v1";
-const DEFAULTS: Settings = { name: "", finishMessage: DEFAULT_FINISH_MESSAGE };
+export const DEFAULTS: Settings = { name: "", finishMessage: DEFAULT_FINISH_MESSAGE, readMode: "normal", seconds: 10, calcMode: "normal", calcSeconds: 10, wordsPerCard: 1 };
 const listeners = new Set<() => void>();
 let cache: Settings | null = null;
 
@@ -25,6 +37,8 @@ function read(): Settings {
   }
   return cache!;
 }
+
+export const getSettings = read;
 
 export function saveSettings(patch: Partial<Settings>) {
   cache = { ...read(), ...patch };

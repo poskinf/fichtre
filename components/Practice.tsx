@@ -4,9 +4,9 @@ import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import { useEffect, useRef, useState } from "react";
 import { shuffle } from "@/lib/math";
-import { finishText, useSettings } from "@/lib/settings";
+import { finishText, getSettings, useSettings } from "@/lib/settings";
 import { speak } from "@/lib/speech";
-import { countStatuses, getProgress, patchEntry, useProgress, type Status } from "@/lib/progress";
+import { countStatuses, getProgress, patchEntries, patchEntry, useProgress, type Status } from "@/lib/progress";
 import { Mascot } from "./Mascot";
 import { ProgressTop } from "./ProgressTop";
 import { Highlight, soundOf } from "./Highlight";
@@ -14,24 +14,55 @@ import type { Card, Deck } from "@/lib/types";
 
 type Check = "right" | "wrong" | null;
 
+/** A card of the pile; with several words per card it carries the other words, which are read and graded with it. */
+type Item = Card & { mates?: Card[] };
+
+const flat = (items: Item[]): Card[] => items.flatMap(({ mates, ...c }) => [c, ...(mates ?? [])]);
+
+/** Shuffles the cards and groups them by the "words per card" setting (sentences and calculations stay alone). */
+function buildPile(cards: Card[]): Item[] {
+  const shuffled = shuffle(cards);
+  const { wordsPerCard, readMode } = getSettings();
+  if (wordsPerCard < 2 || readMode === "spell") return shuffled;
+  const pile: Item[] = [];
+  let group: Card[] = [];
+  const flush = () => {
+    if (group.length) pile.push({ ...group[0], mates: group.slice(1) });
+    group = [];
+  };
+  for (const c of shuffled) {
+    if (c.group === "sentences" || c.answer !== undefined) pile.push(c);
+    else {
+      group.push(c);
+      if (group.length === wordsPerCard) flush();
+    }
+  }
+  flush();
+  return pile;
+}
+
+const spelled = (text: string) => [...text.toUpperCase()].join(" ");
+
 export function Practice({ deck }: { deck: Deck }) {
   // Pick up where we left off: only cards not yet done (to redo, or not started).
   const progress = useProgress(deck.id);
   const settings = useSettings();
-  const [initial] = useState<Card[]>(() => {
+  const [initial] = useState<Item[]>(() => {
     const progress = getProgress(deck.id);
     const left = deck.cards.filter((c) => progress[c.id]?.s !== "ok");
-    return shuffle(left.length ? left : deck.cards);
+    return buildPile(left.length ? left : deck.cards);
   });
-  const [queue, setQueue] = useState<Card[]>(initial);
+  const [queue, setQueue] = useState<Item[]>(initial);
   const [index, setIndex] = useState(0);
-  const [missed, setMissed] = useState<Card[]>([]);
+  const [missed, setMissed] = useState<Item[]>([]);
+  const [hidden, setHidden] = useState(false);
+  const [reveals, setReveals] = useState(0);
   const [base, setBase] = useState(initial.length);
   const [value, setValue] = useState("");
   const [check, setCheck] = useState<Check>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const beforeCheck = useRef<{ id: string; s: Status | undefined } | null>(null);
-  const history = useRef<{ insertedAt: number | null; missedAdded: boolean; prev: Status | undefined }[]>([]);
+  const history = useRef<{ insertedAt: number | null; missedAdded: boolean; prev: Status | undefined; matesPrev: (Status | undefined)[] }[]>([]);
 
   const isMath = deck.kind === "math";
   const sound = isMath ? "" : soundOf(deck);
@@ -39,6 +70,28 @@ export function Practice({ deck }: { deck: Deck }) {
   const card = queue[index];
   const total = queue.length;
   const { ok, redo } = countStatuses(deck.cards, progress);
+  const mode = isMath ? settings.calcMode : settings.readMode;
+  const fading = mode !== "normal" && !check;
+  const seconds = Math.max(1, isMath ? settings.calcSeconds : settings.seconds);
+  const statusOf = (c?: Card) => (c ? getProgress(deck.id)[c.id]?.s : undefined);
+
+  // Flash and spelling modes: the word disappears after a few seconds.
+  const cardId = card?.id;
+  useEffect(() => {
+    setHidden(false);
+    if (mode === "normal" || cardId === undefined) return;
+    const t = setTimeout(() => setHidden(true), seconds * 1000);
+    return () => clearTimeout(t);
+  }, [index, cardId, mode, seconds]);
+
+  /** Shows the word again for a few seconds. */
+  function reveal() {
+    setHidden(false);
+    setReveals((n) => n + 1);
+    revealTimer.current = setTimeout(() => setHidden(true), seconds * 1000);
+  }
+  const revealTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(revealTimer.current), [index]);
 
   function next(wasMissed: boolean) {
     let insertedAt: number | null = null;
@@ -53,8 +106,11 @@ export function Practice({ deck }: { deck: Deck }) {
     }
     const prev = beforeCheck.current?.id === card.id ? beforeCheck.current.s : getProgress(deck.id)[card.id]?.s;
     beforeCheck.current = null;
-    history.current.push({ insertedAt, missedAdded, prev });
-    patchEntry(deck.id, card.id, { s: wasMissed ? "redo" : "ok" });
+    history.current.push({ insertedAt, missedAdded, prev, matesPrev: (card.mates ?? []).map(statusOf) });
+    patchEntries(deck.id, {
+      [card.id]: { s: wasMissed ? "redo" : "ok" },
+      ...Object.fromEntries((card.mates ?? []).map((m) => [m.id, { s: wasMissed ? "redo" : "ok" } as const])),
+    });
     setValue("");
     setCheck(null);
     setIndex((i) => i + 1);
@@ -69,7 +125,11 @@ export function Practice({ deck }: { deck: Deck }) {
       patchEntry(deck.id, card.id, { s: beforeCheck.current.s });
       beforeCheck.current = null;
     }
-    patchEntry(deck.id, queue[index - 1].id, { s: last.prev });
+    const before = queue[index - 1];
+    patchEntries(deck.id, {
+      [before.id]: { s: last.prev },
+      ...Object.fromEntries((before.mates ?? []).map((m, i) => [m.id, { s: last.matesPrev[i] }])),
+    });
     if (last.insertedAt !== null) setQueue((q) => q.filter((_, i) => i !== last.insertedAt));
     if (last.missedAdded) setMissed((m) => m.slice(0, -1));
     setValue("");
@@ -83,14 +143,14 @@ export function Practice({ deck }: { deck: Deck }) {
     const from = Math.min(queue.length, index + 2);
     const insertedAt = from + Math.floor(Math.random() * (queue.length - from + 1));
     setQueue((q) => [...q.slice(0, insertedAt), card, ...q.slice(insertedAt)]);
-    history.current.push({ insertedAt, missedAdded: false, prev: getProgress(deck.id)[card.id]?.s });
+    history.current.push({ insertedAt, missedAdded: false, prev: statusOf(card), matesPrev: (card.mates ?? []).map(statusOf) });
     setValue("");
     setCheck(null);
     setIndex((i) => i + 1);
   }
 
   function restart(cards: Card[]) {
-    setQueue(shuffle(cards));
+    setQueue(buildPile(cards));
     setBase(cards.length);
     history.current = [];
     setIndex(0);
@@ -155,7 +215,7 @@ export function Practice({ deck }: { deck: Deck }) {
           </p>
           <div className="controls">
             {missed.length > 0 && (
-              <button type="button" className="btn primary full" onClick={() => restart(missed)}>
+              <button type="button" className="btn primary full" onClick={() => restart(flat(missed))}>
                 <Icon name="redo" />
                 Refaire les {missed.length} à revoir
               </button>
@@ -179,7 +239,8 @@ export function Practice({ deck }: { deck: Deck }) {
   }
 
   const tone = (isMath ? 2 : 0) + (index % 2);
-  const shown = isMath && check === "wrong" ? `${card.front} = ${card.answer}` : card.front;
+  const text = [card.front, ...(card.mates ?? []).map((m) => m.front)].join(" ");
+  const shown = isMath && check === "wrong" ? `${card.front} = ${card.answer}` : mode === "spell" ? spelled(text) : text;
   const size = shown.length > 16 ? "xlong" : shown.length > 8 ? "long" : "";
 
   return (
@@ -191,11 +252,32 @@ export function Practice({ deck }: { deck: Deck }) {
 
       <div className="stage">
         <div key={`${index}-${card.id}`} className={`card tone-${tone} ${size} ${sound ? "has-sound" : ""} ${check ?? ""}`}>
-          <span>
-            {isMath ? shown : <Highlight text={card.front} sound={sound} />}
-          </span>
+          {hidden && !check ? (
+            <span aria-label="Mot caché">• • •</span>
+          ) : (
+            <span key={`${reveals}-${check}`} className={fading ? "fade-out" : undefined} style={fading ? { animationDuration: `${seconds}s` } : undefined}>
+              {isMath || mode === "spell" ? (
+                shown
+              ) : (
+                <>
+                  <Highlight text={card.front} sound={sound} />
+                  {card.mates?.map((m) => (
+                    <span key={m.id}>
+                      {" "}
+                      <Highlight text={m.front} sound={sound} />
+                    </span>
+                  ))}
+                </>
+              )}
+            </span>
+          )}
         </div>
       </div>
+      {mode === "spell" && (
+        <p className="hint" style={{ textAlign: "center" }}>
+          Épelle le mot lettre par lettre, puis dis le mot.
+        </p>
+      )}
 
       {isMath ? (
         <form onSubmit={onSubmit} style={{ display: "grid", gap: 12 }}>
@@ -219,6 +301,12 @@ export function Practice({ deck }: { deck: Deck }) {
           <p className={`feedback ${check ?? ""}`} aria-live="polite">
             {check === "right" ? "Juste !" : check === "wrong" ? `C’est ${card.answer}.` : ""}
           </p>
+          {fading && hidden && (
+            <button type="button" className="btn" onClick={reveal}>
+              <Icon name="eye" />
+              Montrer le calcul
+            </button>
+          )}
           <div className="nav-row">
             <button type="button" className="btn" onClick={back} disabled={index === 0}>
               <Icon name="left" />
@@ -232,12 +320,18 @@ export function Practice({ deck }: { deck: Deck }) {
         </form>
       ) : (
         <div className="controls">
+          {mode !== "normal" && hidden && (
+            <button type="button" className="btn full" onClick={reveal}>
+              <Icon name="eye" />
+              Montrer le mot
+            </button>
+          )}
           <div className="tool-row full">
             <button type="button" className="tool prev" onClick={back} disabled={index === 0}>
               <Icon name="left" />
               Précédent
             </button>
-            <button type="button" className="tool listen" onClick={() => speak(card.front)}>
+            <button type="button" className="tool listen" onClick={() => speak(text)}>
               <Icon name="speaker" />
               Écouter
             </button>
