@@ -864,3 +864,27 @@ body:has(.appbar-instruction) { --appbar-h: 118px; }
 .preview-card .done-banner { margin: 0; text-align: center; }
 .journal-label { max-width: 11rem; overflow: hidden; text-overflow: ellipsis; }
 .journal-label { max-width: 11rem; overflow: hidden; text-overflow: ellipsis; }
+
+/* Flash and spelling modes: the word fades out until it disappears. */
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.fade-out {
+  animation-name: fade-out;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+/* Settings: the buttons stay in one row at the bottom of the screen. */
+.settings-actions {
+  position: sticky; bottom: 0; z-index: 5;
+  display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap;
+  margin: 8px -16px 0; padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, 0.94); box-shadow: 0 -10px 20px -16px rgba(35, 48, 63, 0.35);
+}

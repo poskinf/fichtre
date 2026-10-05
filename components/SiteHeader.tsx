@@ -39,6 +39,11 @@ export function SiteHeader() {
         </Link>
       )}
       <div className="appbar-right">
+        {deckPage && parent && deckPage[1] === "play" && (
+          <Link href="/settings" className="btn small icon-only" aria-label="Réglages" title="Réglages">
+            <Icon name="sliders" />
+          </Link>
+        )}
         {deckPage ? (
           deckPage[1] === "sheet" ? (
             <Link href={`/play/${deckPage[2]}`} replace className="btn small">

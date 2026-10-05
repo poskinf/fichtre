@@ -8,6 +8,12 @@ const PATHS = {
   ),
   check: <path d="M4 12.5l5 5L20 6" />,
   redo: <path d="M20 12a8 8 0 11-2.6-5.9M20 4v5h-5" />,
+  eye: (
+    <>
+      <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" />
+      <circle cx="12" cy="12" r="3" />
+    </>
+  ),
   right: <path d="M4 12h15M13 6l6 6-6 6" />,
   left: <path d="M20 12H5M11 6l-6 6 6 6" />,
   close: <path d="M6 6l12 12M18 6L6 18" />,
