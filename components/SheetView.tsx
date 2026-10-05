@@ -42,7 +42,7 @@ export function SheetView({ deck }: { deck: Deck }) {
       <ProgressTop label={`${ok} / ${deck.cards.length}${redo ? ` · ${redo} à corriger` : ""}`} value={ok} max={deck.cards.length} />
       <article className="paper">
         <header className="paper-head">
-          <h1>{deck.title}</h1>
+          <h1 className="sr-only">{deck.title}</h1>
           <p className="first-name">
             Prénom : <span className={settings.name.trim() ? "name" : ""}>{settings.name.trim()}</span>
           </p>

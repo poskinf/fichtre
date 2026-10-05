@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import { useEffect, useRef, useState } from "react";
+import { setInstruction } from "@/lib/instruction-store";
 import { shuffle } from "@/lib/math";
 import { finishText, getSettings, useSettings } from "@/lib/settings";
 import { speak } from "@/lib/speech";
@@ -74,6 +75,13 @@ export function Practice({ deck }: { deck: Deck }) {
   const fading = mode !== "normal" && !check;
   const seconds = Math.max(1, isMath ? settings.calcSeconds : settings.seconds);
   const statusOf = (c?: Card) => (c ? getProgress(deck.id)[c.id]?.s : undefined);
+
+  // Like on the sheet, the instruction is shown in the header.
+  const instruction = done ? null : isMath ? "Calcule et écris la réponse." : card?.mates?.length ? "Lis les mots à voix haute." : "Lis le mot à voix haute.";
+  useEffect(() => {
+    setInstruction(instruction);
+    return () => setInstruction(null);
+  }, [instruction]);
 
   // Flash and spelling modes: the word disappears after a few seconds.
   const cardId = card?.id;
@@ -246,8 +254,8 @@ export function Practice({ deck }: { deck: Deck }) {
   return (
     <main className="shell play">
       <div>
-        <h1 className="sheet-title">{deck.title}</h1>
         <ProgressTop label={`${ok} / ${deck.cards.length}${redo ? ` · ${redo} ${isMath ? "faux" : "à corriger"}` : ""}`} value={ok} max={deck.cards.length} />
+        <h1 className="sr-only">{deck.title}</h1>
       </div>
 
       <div className="stage">
@@ -273,12 +281,6 @@ export function Practice({ deck }: { deck: Deck }) {
           )}
         </div>
       </div>
-      {mode === "spell" && (
-        <p className="hint" style={{ textAlign: "center" }}>
-          Épelle le mot lettre par lettre, puis dis le mot.
-        </p>
-      )}
-
       {isMath ? (
         <form onSubmit={onSubmit} style={{ display: "grid", gap: 12 }}>
           <div className="answer-row">

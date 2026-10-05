@@ -888,3 +888,23 @@ body:has(.appbar-instruction) { --appbar-h: 118px; }
   margin: 8px -16px 0; padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
   background: rgba(255, 255, 255, 0.94); box-shadow: 0 -10px 20px -16px rgba(35, 48, 63, 0.35);
 }
+
+/* Drop-downs: rounder, with the arrow kept away from the edge. */
+.field select {
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 18px;
+  padding-right: 52px;
+  cursor: pointer;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='10' viewBox='0 0 16 10' fill='none' stroke='%2323303f' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 2l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 22px center;
+}
+
+/* Deck pages: the settings icon sits next to the Cartes / Feuille switch, so the middle column gives way. */
+.appbar.deck { grid-template-columns: auto minmax(0, 1fr) auto; }
+.appbar.deck .journal-btn { justify-self: center; }
+
+/* The sheet no longer prints the title: the first name stays on the right. */
+.paper-head .first-name { margin-left: auto; }
